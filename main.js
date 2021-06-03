@@ -28,23 +28,25 @@ function createPlayer(player, character) {
     const $character = document.createElement('div');
     const $img = document.createElement('img');
 
+    const $arenas = document.querySelector('.arenas');
+
     $player.classList.add(player);      
     $progressbar.classList.add('progressbar');
     $life.classList.add('life');
     $name.classList.add(player);
     $character.classList.add('character');
     
+    $life.style.width = character.hp; 
+    $life.innerText = `${character.hp} %`;   
+    $name.innerText = character.name; 
+    $img.src = character.img;
+    console.log($life)
+
     $player.appendChild($progressbar);  
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
     $player.appendChild($character);
     $character.appendChild($img);
-    
-    $life.style.width = character.hp;   
-    $name.innerText = character.name; 
-    $img.src = character.img;
-    
-    const $arenas = document.querySelector('.arenas');
     $arenas.appendChild($player);
 }
 
