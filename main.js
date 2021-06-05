@@ -1,22 +1,24 @@
 const liuKang = {
     name: 'Liu Kang',
-    hp: 80,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
     weapon: ['Dragon sword', 'Nunchucks', 'Fire ball'],
     attack: function () {
         console.log(liuKang.name + ' ' + 'Fight...');
-    }
+    },
+    player: 1,
 }
 liuKang.attack()
 
 const subZero = {
     name: 'Sub Zero',
-    hp: 50,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['Sword', 'Snow ball'],
     attack: function () {
         console.log(subZero.name + ' ' + 'Fight...');
-    }
+    },
+    player: 2,
 }
 subZero.attack()
 
@@ -47,7 +49,19 @@ function createPlayer(player, character) {
     $player.appendChild($character);
     $character.appendChild($img);
     $arenas.appendChild($player);
+
+
+    function changeHP(hp) {
+        const hpChange = player.hp <= 0 ? player.hp = hp : player.hp
+
+        return hpChange
+        }
+        
+        console.log(changeHP(10))
+        console.log(changeHP(20))
+        console.log(changeHP(30))
 }
 
 createPlayer('player1', liuKang)
 createPlayer('player2', subZero);
+
