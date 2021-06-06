@@ -64,24 +64,35 @@ $randomButton.addEventListener('click', function() {
 })
 
 function changeHP(player) {
-    const $playerLife = document.querySelector('.player' + player.player +' .life')
+    const $playerHP = document.querySelector('.player' + player.player +' .name');
+    const $playerLife = document.querySelector('.player' + player.player +' .life');
+    $playerLife.style.width = player.hp +'%';   
     player.hp -= randomInteger(1, 20);
-    $playerLife.style.width = player.hp +'%';
-    const $playerHP = document.querySelector('.player' + player.player +' .name')
-    console.log(player.hp)
+
     if(player.hp <= 0) {
         player.hp = 0;
-      if(liuKang.hp >= subZero.hp) {
-        $arenas.appendChild(playerWin(liuKang.name));
+        $playerLife.style.width = 0 + '%';
         $randomButton.disabled = true;
-       } if (liuKang.hp < 0 && subZero.hp < 0) {
-        $arenas.appendChild(playerWin('No one'));
-      }
-    }
-
+    } 
+    
     if (player.hp >= 0) {
         $playerHP.innerText = player.name + ' ' +player.hp + '%';
     }
+
+    function chooseWinner(player1, player2)  {
+        if (player1.hp > 0 && player2.hp <= 0) {
+            $arenas.appendChild(playerWin(player1.name));
+        } 
+        
+        if (player1.hp <= 0 && player2.hp > 0) {
+            $arenas.appendChild(playerWin(player2.name));
+        }
+
+        if (player1.hp <= 0 && player2.hp <= 0) {
+            $arenas.appendChild(playerWin('No one'));
+        }
+    }
+       chooseWinner(liuKang, subZero)
 }
 
 function randomInteger(min, max) {
