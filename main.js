@@ -79,10 +79,8 @@ $randomButton.addEventListener('click', function() {
 
         liuKang.changeHP(randomInteger(1, 20));
         subZero.changeHP(randomInteger(1, 20));
-        liuKang.elHP();
-        subZero.elHP();
-        liuKang.renderHP();
-        subZero.renderHP();
+        liuKang.renderHP(liuKang.elHP()); 
+        subZero.renderHP(subZero.elHP());
 
         createReloadButton()
 })
@@ -114,22 +112,23 @@ function playerWins(name){
 }
 
 function  elHP() {
+    console.log('object :>> ', '.player' + this.player);
     return  document.querySelector('.player' + this.player +' .life');
+    
 }
 
-function  renderHP() {
-    const $playerLife = document.querySelector('.player' + this.player +' .life');
+function  renderHP(playerLife) {
     const $playerName = document.querySelector('.player' + this.player +' .name');
-    console.log($playerName)
     $playerName.innerText = this.name + ' ' +this.hp + '%';
     
     if (this.hp >= 0) {
-       $playerLife.style.width = this.hp +'%'; 
+        playerLife.style.width = this.hp +'%'; 
     } else {
-        $playerLife.style.width = 0 + '%';
+        playerLife.style.width = 0 + '%';
     }
-    
-    return $playerLife
+    console.log('object :>> ', playerLife);
+    console.log('object :>> ', $playerName);
+    //return $playerLife
 }
 
 function createReloadButton() {
