@@ -1,10 +1,8 @@
-<<<<<<< Updated upstream
-=======
+
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button')
 const $control = document.querySelector('.control');
 
->>>>>>> Stashed changes
 const liuKang = {
     name: 'Liu Kang',
     hp: 100,
@@ -13,13 +11,10 @@ const liuKang = {
     attack: function () {
         console.log(liuKang.name + ' ' + 'Fight...');
     },
-<<<<<<< Updated upstream
     player: 1,
-=======
     changeHP: changeHP,
     elHP: elHP,
     renderHP: renderHP,
->>>>>>> Stashed changes
 }
 liuKang.attack()
 
@@ -31,61 +26,41 @@ const subZero = {
     attack: function () {
         console.log(subZero.name + ' ' + 'Fight...');
     },
-<<<<<<< Updated upstream
     player: 2,
-=======
     changeHP: changeHP,
     elHP: elHP,
     renderHP: renderHP,
->>>>>>> Stashed changes
 }
 subZero.attack()
 
-function createPlayer(player, character) {
-    const $player = document.createElement('div');
-    const $progressbar = document.createElement('div');
-    const $life = document.createElement('div');
-    const $name = document.createElement('div');
-    const $character = document.createElement('div');
-    const $img = document.createElement('img');
+function createElement(tag, className) {
+    const $tag = document.createElement(tag);
+    
+    if(className) {
+        $tag.classList.add(className);
+      }
+    return $tag
+    }
 
-    const $arenas = document.querySelector('.arenas');
+function createPlayer(character) {
+    const $player = createElement('div', 'player' + character.player);
+    const $progressbar = createElement('div', 'progressbar');
+    const $life = createElement('div', 'life');
+    const $name = createElement('div', 'name');
+    const $character = createElement('div', 'character');
+    const $img = createElement('img');
 
-    $player.classList.add(player);
-    $progressbar.classList.add('progressbar');
-    $life.classList.add('life');
-    $name.classList.add(player);
-    $character.classList.add('character');
 
-    $life.style.width = character.hp;
-    $life.innerText = `${character.hp} %`;
+    $life.style.width = character.hp + '%';
     $name.innerText = character.name;
     $img.src = character.img;
 
-    $player.appendChild($progressbar);
+    
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
+    $player.appendChild($progressbar);
     $player.appendChild($character);
     $character.appendChild($img);
-<<<<<<< Updated upstream
-    $arenas.appendChild($player);
-
-
-    function changeHP(hp) {
-        const hpChange = player.hp <= 0 ? player.hp = hp : player.hp
-
-        return hpChange
-        }
-        
-        console.log(changeHP(10))
-        console.log(changeHP(20))
-        console.log(changeHP(30))
-}
-
-createPlayer('player1', liuKang)
-createPlayer('player2', subZero);
-
-=======
     
     return $player;
 }
@@ -108,6 +83,8 @@ $randomButton.addEventListener('click', function() {
         subZero.elHP();
         liuKang.renderHP();
         subZero.renderHP();
+
+        createReloadButton()
 })
 
 function changeHP(damage) {
@@ -143,6 +120,7 @@ function  elHP() {
 function  renderHP() {
     const $playerLife = document.querySelector('.player' + this.player +' .life');
     const $playerName = document.querySelector('.player' + this.player +' .name');
+    console.log($playerName)
     $playerName.innerText = this.name + ' ' +this.hp + '%';
     
     if (this.hp >= 0) {
@@ -172,8 +150,7 @@ function createReloadButton() {
     
         return hideButton
 }
-createReloadButton()
+
 
 $arenas.appendChild(createPlayer(liuKang));
 $arenas.appendChild(createPlayer(subZero))
->>>>>>> Stashed changes
