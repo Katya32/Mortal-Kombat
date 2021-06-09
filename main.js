@@ -32,7 +32,7 @@ function attack() {
     console.log(this.name + ' ' + 'Fight...');
 }
 
-function createElement(tag, className) {
+function createElement(tag, className) {  //Функция для создания тэгов и классов
     const $tag = document.createElement(tag);
     if(className) {
         $tag.classList.add(className);
@@ -40,7 +40,7 @@ function createElement(tag, className) {
     return $tag
 }
 
-function createPlayer(character) {
+function createPlayer(character) {  //Функция создает тэги с классами и вставляет их в $player
     const $player = createElement('div', 'player' + character.player);
     const $progressbar = createElement('div', 'progressbar');
     const $life = createElement('div', 'life');
@@ -63,11 +63,11 @@ function createPlayer(character) {
     return $player;
 }
 
-function  elHP() {  
+function  elHP() {   //coздает ссылку на div c классом life у каждого игрока (шкала жизни)
     return  document.querySelector('.player' + this.player +' .life');
 }
 
-function changeHP(randomInteger) {
+function changeHP(randomInteger) { //При нажатии на кнопку Рандом у игрока отнимаеться рамдомное количество жизни. Если жизнь уйдет в минус, игроку запишется значение 0
     this.hp -= randomInteger;
     
     if(this.hp <= 0) {
@@ -76,13 +76,13 @@ function changeHP(randomInteger) {
     return this.hp
 }
 
-function  renderHP() {
+function  renderHP() {  //ширина и количество шкалы жизни меняются в зависимости от hp
     this.elHP().style.width = this.hp +'%'; 
     const $playerName = document.querySelector('.player' + this.player +' .name');
     $playerName.innerText = this.name + ' ' +this.hp + '%';
 }
 
-function playerWins(name){
+function playerWins(name){ // Создает тэг div с классом winTitlе и выводит имя победителя или ничью
     const  $winTitle = createElement('div', 'winTitle');
     if(name) {
      $winTitle.innerText = name + ' wins';
@@ -92,11 +92,13 @@ function playerWins(name){
     return $winTitle;
  }
 
-function randomInteger(min, max) {
+function randomInteger(min, max) { //Создает рандомное число от 1 до 20
     return Math.ceil(min + Math.random()*(max + 1 -min))
 }
 
-$randomButton.addEventListener('click', function() {
+$randomButton.addEventListener('click', function() {  /*Вешает слушателя события на кнопку Рандом. При нажатии на кнопку вызываеться функция changeHP и 
+                                                      отнимается количество жизни и отображаеться на шкале при вызове changeHP.
+                                                      Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
     liuKang.changeHP(randomInteger(1, 20));
     liuKang.renderHP();
 
@@ -117,7 +119,8 @@ $randomButton.addEventListener('click', function() {
     }
 })
 
-function createReloadButton() {
+function createReloadButton() { /*Создает кнопку перезагрузки при завершении игры(если у одного из игроков hp = 0) 
+                                  и вешает на него слушателя событый с функцией перезагрузки*/
     const $div = createElement("div", "reloadWrap");
     const $button = createElement("button", "button");
     $button.innerText = 'Restart';
