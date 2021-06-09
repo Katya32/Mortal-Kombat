@@ -41,6 +41,22 @@ function createElement(tag, className) {  //Функция для создани
 }
 
 function createPlayer(character) {  //Функция создает тэги с классами и вставляет их в $player
+    attack: function () {
+        console.log(subZero.name + ' ' + 'Fight...');
+    },
+}
+subZero.attack()
+
+function createElement(tag, className) {
+const $tag = document.createElement(tag);
+
+if(className) {
+    $tag.classList.add(className);
+  }
+return $tag
+}
+
+function createPlayer(character) {
     const $player = createElement('div', 'player' + character.player);
     const $progressbar = createElement('div', 'progressbar');
     const $life = createElement('div', 'life');
@@ -50,7 +66,11 @@ function createPlayer(character) {  //Функция создает тэги с 
 
 
     $life.style.width = character.hp + '%';
+
     $name.innerText = character.name + ' ' + character.hp + '%';
+
+    $name.innerText = character.name;
+
     $img.src = character.img;
 
     
@@ -135,3 +155,54 @@ function createReloadButton() { /*Создает кнопку перезагру
 
 $arenas.appendChild(createPlayer(liuKang));
 $arenas.appendChild(createPlayer(subZero));
+
+$randomButton.addEventListener('click', function() {
+    changeHP(liuKang);
+    changeHP(subZero);
+})
+
+function changeHP(player) {
+    const $playerHP = document.querySelector('.player' + player.player +' .name');
+    const $playerLife = document.querySelector('.player' + player.player +' .life');
+    $playerLife.style.width = player.hp +'%';   
+    player.hp -= randomInteger(1, 20);
+
+    if(player.hp <= 0) {
+        player.hp = 0;
+        $playerLife.style.width = 0 + '%';
+        $randomButton.disabled = true;
+    } 
+    
+    if (player.hp >= 0) {
+        $playerHP.innerText = player.name + ' ' +player.hp + '%';
+    }
+
+    function chooseWinner(player1, player2)  {
+        if (player1.hp > 0 && player2.hp <= 0) {
+            $arenas.appendChild(playerWin(player1.name));
+        } 
+        
+        if (player1.hp <= 0 && player2.hp > 0) {
+            $arenas.appendChild(playerWin(player2.name));
+        }
+
+        if (player1.hp <= 0 && player2.hp <= 0) {
+            $arenas.appendChild(playerWin('No one'));
+        }
+    }
+       chooseWinner(liuKang, subZero)
+}
+
+function randomInteger(min, max) {
+    let random = Math.ceil(min + Math.random()*(max + 1 -min))
+    return random
+}
+
+function playerWin(name){
+    $winTitle = createElement('div', 'winTitle');
+    $winTitle.innerText = name + ' win';
+    return $winTitle;
+}
+
+$arenas.appendChild(createPlayer(liuKang));
+$arenas.appendChild(createPlayer(subZero))

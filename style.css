@@ -21,6 +21,7 @@ html {
   margin: 0;
   padding: 0;
   visibility: visible;
+
 }
 
 body {
@@ -285,4 +286,16 @@ body {
 
 .reloadWrap .button {
   margin-top: 0px;
+}
+
+.winTitle {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  font-size: 36px;
+  transform: translate(-50%, 0%);
+  text-transform: uppercase;
+  z-index: 1000;
+  color: white;
+  font-family: "Mortal Kombat 3";
 }
