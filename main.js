@@ -1,9 +1,8 @@
-
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button')
-const $control = document.querySelector('.control');
 
 const liuKang = {
+    player: 1,
     name: 'Liu Kang',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
@@ -11,36 +10,35 @@ const liuKang = {
     attack: function () {
         console.log(liuKang.name + ' ' + 'Fight...');
     },
-    player: 1,
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP,
+    changeHP,
+    elHP,
+    renderHP,
+    attack,
 }
-liuKang.attack()
 
 const subZero = {
+    player: 2,
     name: 'Sub Zero',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['Sword', 'Snow ball'],
-    attack: function () {
-        console.log(subZero.name + ' ' + 'Fight...');
-    },
-    player: 2,
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP,
+    changeHP,
+    elHP,
+    renderHP,
+    attack,
 }
-subZero.attack()
+
+function attack() {
+    console.log(this.name + ' ' + 'Fight...');
+}
 
 function createElement(tag, className) {
     const $tag = document.createElement(tag);
-    
     if(className) {
         $tag.classList.add(className);
       }
     return $tag
-    }
+}
 
 function createPlayer(character) {
     const $player = createElement('div', 'player' + character.player);
@@ -52,7 +50,7 @@ function createPlayer(character) {
 
 
     $life.style.width = character.hp + '%';
-    $name.innerText = character.name;
+    $name.innerText = character.name + ' ' + character.hp + '%';
     $img.src = character.img;
 
     
@@ -65,91 +63,72 @@ function createPlayer(character) {
     return $player;
 }
 
-$randomButton.addEventListener('click', function() {
+function  elHP() {  
+    return  document.querySelector('.player' + this.player +' .life');
+}
 
-    if (liuKang.hp === 0 || subZero.hp === 0) {
-        $randomButton.disabled = true;
-    }
-
-    if (liuKang.hp === 0 && liuKang.hp < subZero.hp) {
-        $arenas.appendChild(playerWins(subZero.name));
-    } else if (subZero.hp === 0 && subZero.hp < liuKang.hp) {
-        $arenas.appendChild(playerWins(liuKang.name));
-    }
-
-        liuKang.changeHP(randomInteger(1, 20));
-        subZero.changeHP(randomInteger(1, 20));
-        liuKang.renderHP(liuKang.elHP()); 
-        subZero.renderHP(subZero.elHP());
-
-        createReloadButton()
-})
-
-function changeHP(damage) {
-    this.hp -= damage;
+function changeHP(randomInteger) {
+    this.hp -= randomInteger;
     
     if(this.hp <= 0) {
         this.hp = 0;
     } 
     return this.hp
 }
- 
+
+function  renderHP() {
+    this.elHP().style.width = this.hp +'%'; 
+    const $playerName = document.querySelector('.player' + this.player +' .name');
+    $playerName.innerText = this.name + ' ' +this.hp + '%';
+}
+
+function playerWins(name){
+    const  $winTitle = createElement('div', 'winTitle');
+    if(name) {
+     $winTitle.innerText = name + ' wins';
+    } else {
+     $winTitle.innerText = 'draw';
+    }
+    return $winTitle;
+ }
 
 function randomInteger(min, max) {
     return Math.ceil(min + Math.random()*(max + 1 -min))
 }
 
-function playerWins(name){
-   const  $winTitle = createElement('div', 'winTitle');
-    
-   if(name) {
-    $winTitle.innerText = name + ' wins';
-   } else {
-    $winTitle.innerText = 'draw';
-   }
-   
-    return $winTitle;
-}
+$randomButton.addEventListener('click', function() {
+    liuKang.changeHP(randomInteger(1, 20));
+    liuKang.renderHP();
 
-function  elHP() {
-    console.log('object :>> ', '.player' + this.player);
-    return  document.querySelector('.player' + this.player +' .life');
-    
-}
+    subZero.changeHP(randomInteger(1, 20));
+    subZero.renderHP();
 
-function  renderHP(playerLife) {
-    const $playerName = document.querySelector('.player' + this.player +' .name');
-    $playerName.innerText = this.name + ' ' +this.hp + '%';
-    
-    if (this.hp >= 0) {
-        playerLife.style.width = this.hp +'%'; 
-    } else {
-        playerLife.style.width = 0 + '%';
+    if (liuKang.hp === 0 || subZero.hp === 0) {
+        $randomButton.disabled = true;
+        createReloadButton()
     }
-    console.log('object :>> ', playerLife);
-    console.log('object :>> ', $playerName);
-    //return $playerLife
-}
+
+    if (liuKang.hp === 0 && liuKang.hp < subZero.hp) {
+        $arenas.appendChild(playerWins(subZero.name));
+    } else if (subZero.hp === 0 && subZero.hp < liuKang.hp) {
+        $arenas.appendChild(playerWins(liuKang.name));
+    } else if (liuKang.hp === 0 && subZero.hp === 0) {
+        $arenas.appendChild(playerWins());
+    }
+})
 
 function createReloadButton() {
-    const $div = document.createElement("div");
-    $div.classList.add("reloadWrap");
-    const $button = document.createElement("button");
-    $button.classList.add("button");
+    const $div = createElement("div", "reloadWrap");
+    const $button = createElement("button", "button");
     $button.innerText = 'Restart';
-
-    $div.append($button);
-    $control.append($div);
 
     $div.addEventListener('click', function() {
         window.location.reload()
     })
 
-    const hideButton = liuKang.hp === 0 || subZero.hp === 0 ? $div.style.display = 'none' : $div.style.display = ''
-    
-        return hideButton
+    $div.append($button);
+    $arenas.append($div);
 }
 
-
 $arenas.appendChild(createPlayer(liuKang));
-$arenas.appendChild(createPlayer(subZero))
+$arenas.appendChild(createPlayer(subZero));
