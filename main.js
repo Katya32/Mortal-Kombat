@@ -1,5 +1,6 @@
 const $arenas = document.querySelector('.arenas');
-const $randomButton = document.querySelector('.button')
+const $fightButton = document.querySelector('.button');
+const $formFight = document.querySelector('.control');
 
 const liuKang = {
     player: 1,
@@ -7,9 +8,6 @@ const liuKang = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
     weapon: ['Dragon sword', 'Nunchucks', 'Fire ball'],
-    attack: function () {
-        console.log(liuKang.name + ' ' + 'Fight...');
-    },
     changeHP,
     elHP,
     renderHP,
@@ -27,6 +25,13 @@ const subZero = {
     renderHP,
     attack,
 }
+
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 function attack() {
     console.log(this.name + ' ' + 'Fight...');
@@ -48,11 +53,9 @@ function createPlayer(character) {  //Функция создает тэги с 
     const $character = createElement('div', 'character');
     const $img = createElement('img');
 
-
     $life.style.width = character.hp + '%';
     $name.innerText = character.name + ' ' + character.hp + '%';
     $img.src = character.img;
-
     
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
@@ -96,29 +99,6 @@ function randomInteger(min, max) { //Создает рандомное числ�
     return Math.ceil(min + Math.random()*(max + 1 -min))
 }
 
-$randomButton.addEventListener('click', function() {  /*Вешает слушателя события на кнопку Рандом. При нажатии на кнопку вызываеться функция changeHP и 
-                                                      отнимается количество жизни и отображаеться на шкале при вызове changeHP.
-                                                      Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
-    liuKang.changeHP(randomInteger(1, 20));
-    liuKang.renderHP();
-
-    subZero.changeHP(randomInteger(1, 20));
-    subZero.renderHP();
-
-    if (liuKang.hp === 0 || subZero.hp === 0) {
-        $randomButton.disabled = true;
-        createReloadButton()
-    }
-
-    if (liuKang.hp === 0 && liuKang.hp < subZero.hp) {
-        $arenas.appendChild(playerWins(subZero.name));
-    } else if (subZero.hp === 0 && subZero.hp < liuKang.hp) {
-        $arenas.appendChild(playerWins(liuKang.name));
-    } else if (liuKang.hp === 0 && subZero.hp === 0) {
-        $arenas.appendChild(playerWins());
-    }
-})
-
 function createReloadButton() { /*Создает кнопку перезагрузки при завершении игры(если у одного из игроков hp = 0) 
                                   и вешает на него слушателя событый с функцией перезагрузки*/
     const $div = createElement("div", "reloadWrap");
@@ -132,6 +112,59 @@ function createReloadButton() { /*Создает кнопку перезагру
     $div.append($button);
     $arenas.append($div);
 }
+ 
 
 $arenas.appendChild(createPlayer(liuKang));
 $arenas.appendChild(createPlayer(subZero));
+
+function enemyAttack() {
+    const hit =  ATTACK[randomInteger(3)-1];
+    console.log('object :>> ', hit);
+    const defence = ATTACK[randomInteger(3)-1];
+    console.log('object :>> ', defence);
+
+     return {
+         value: randomInteger(HIT[hit]), 
+         hit, 
+         defence,
+    }
+ }
+
+$formFight.addEventListener('submit', function(event) { //Вешаем слушателя событий на кнопку Fight
+    event.preventDefault();
+    const enemy = enemyAttack();
+    
+    const attack = {};
+    for(let item of $formFight) {
+        if(item.cheked && item.name === 'hit') {
+            attack.value = randomInteger(HIT[item.value]);
+            attack.hit = item.value;
+        }
+
+        if(item.cheked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+        item.cheked = false;
+    }
+/*При нажатии на кнопку вызываеться функция changeHP и 
+отнимается количество жизни и отображаеться на шкале при вызове changeHP.
+Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
+    liuKang.changeHP(randomInteger(1, 20));
+    liuKang.renderHP();
+
+    subZero.changeHP(randomInteger(1, 20));
+    subZero.renderHP();
+
+    if (liuKang.hp === 0 || subZero.hp === 0) {
+        $fightButton.disabled = true;
+        createReloadButton()
+    }
+
+    if (liuKang.hp === 0 && liuKang.hp < subZero.hp) {
+        $arenas.appendChild(playerWins(subZero.name));
+    } else if (subZero.hp === 0 && subZero.hp < liuKang.hp) {
+        $arenas.appendChild(playerWins(liuKang.name));
+    } else if (liuKang.hp === 0 && subZero.hp === 0) {
+        $arenas.appendChild(playerWins());
+    }
+})
