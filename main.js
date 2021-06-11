@@ -11,7 +11,7 @@ const liuKang = {
     changeHP,
     elHP,
     renderHP,
-    attack,
+    //attack,
 }
 
 const subZero = {
@@ -23,18 +23,7 @@ const subZero = {
     changeHP,
     elHP,
     renderHP,
-    attack,
-}
-
-const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
-}
-const ATTACK = ['head', 'body', 'foot'];
-
-function attack() {
-    console.log(this.name + ' ' + 'Fight...');
+    //attack,
 }
 
 function createElement(tag, className) {  //Функция для создания тэгов и классов
@@ -117,43 +106,58 @@ function createReloadButton() { /*Создает кнопку перезагру
 $arenas.appendChild(createPlayer(liuKang));
 $arenas.appendChild(createPlayer(subZero));
 
-function enemyAttack() {
-    const hit =  ATTACK[randomInteger(3)-1];
-    console.log('object :>> ', hit);
-    const defence = ATTACK[randomInteger(3)-1];
-    console.log('object :>> ', defence);
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
+function enemyAttack() { //Рандомный урон от врага
+    const hit =  ATTACK[randomInteger(0, ATTACK.length-1)-1];
+    const defence = ATTACK[randomInteger(0, ATTACK.length-1)-1];
      return {
-         value: randomInteger(HIT[hit]), 
+         value: randomInteger(0, HIT[hit]), 
          hit, 
          defence,
     }
  }
 
-$formFight.addEventListener('submit', function(event) { //Вешаем слушателя событий на кнопку Fight
+$formFight.addEventListener('submit', function(event) { /*Вешаем слушателя событий на кнопку Fight. Выводим наши чекбоксы*/
     event.preventDefault();
     const enemy = enemyAttack();
-    
     const attack = {};
-    for(let item of $formFight) {
-        if(item.cheked && item.name === 'hit') {
-            attack.value = randomInteger(HIT[item.value]);
-            attack.hit = item.value;
-        }
 
-        if(item.cheked && item.name === 'defence') {
-            attack.defence = item.value;
+    for(let item of $formFight) { //Перебираем все инпуты у формы
+           if(item.checked && item.name === 'hit') { //Если выбран удар, то в обьект записываем куда бьем и какой урон
+                attack.value = randomInteger(0, HIT[item.value]);
+                attack.hit = item.value;
+             }
+            if(item.checked && item.name === 'defence') { //Если выбрана защита, то в обьект записываем что защищаем
+                attack.defence = item.value;
+            }
+           item.checked = false;
+    } 
+
+    function fight(enemy, attack) {
+        if (attack.hit === enemy.defence) {
+            attack.value = 0;
+        } else if (enemy.hit === attack.defence){
+            enemy.value = 0;
         }
-        item.cheked = false;
     }
-/*При нажатии на кнопку вызываеться функция changeHP и 
-отнимается количество жизни и отображаеться на шкале при вызове changeHP.
-Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
-    liuKang.changeHP(randomInteger(1, 20));
-    liuKang.renderHP();
+        fight(enemy, attack) 
 
-    subZero.changeHP(randomInteger(1, 20));
-    subZero.renderHP();
+    function repeat(player) { /*При нажатии на кнопку вызываеться функция changeHP и отнимается количество жизни и отображаеться на шкале при вызове changeHP.
+        Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
+        player.changeHP(randomInteger(1, 20));
+        player.renderHP();
+
+        player.changeHP(randomInteger(1, 20));
+        player.renderHP();
+    }
+        repeat(liuKang)
+        repeat(subZero)
 
     if (liuKang.hp === 0 || subZero.hp === 0) {
         $fightButton.disabled = true;
@@ -168,3 +172,6 @@ $formFight.addEventListener('submit', function(event) { //Вешаем слуш�
         $arenas.appendChild(playerWins());
     }
 })
+
+
+
