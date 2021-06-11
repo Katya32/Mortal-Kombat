@@ -84,8 +84,8 @@ function playerWins(name){ // Создает тэг div с классом winTit
     return $winTitle;
  }
 
-function randomInteger(min, max) { //Создает рандомное число от 1 до 20
-    return Math.ceil(min + Math.random()*(max + 1 -min))
+function randomInteger(num) { //Создает рандомное число
+    return Math.ceil(Math.random()*num)
 }
 
 function createReloadButton() { /*Создает кнопку перезагрузки при завершении игры(если у одного из игроков hp = 0) 
@@ -114,10 +114,10 @@ const HIT = {
 const ATTACK = ['head', 'body', 'foot'];
 
 function enemyAttack() { //Рандомный урон от врага
-    const hit =  ATTACK[randomInteger(0, ATTACK.length-1)-1];
-    const defence = ATTACK[randomInteger(0, ATTACK.length-1)-1];
+    const hit =  ATTACK[randomInteger(ATTACK.length-1)-1];
+    const defence = ATTACK[randomInteger(ATTACK.length-1)-1];
      return {
-         value: randomInteger(0, HIT[hit]), 
+         value: randomInteger(HIT[hit]), 
          hit, 
          defence,
     }
@@ -125,39 +125,24 @@ function enemyAttack() { //Рандомный урон от врага
 
 $formFight.addEventListener('submit', function(event) { /*Вешаем слушателя событий на кнопку Fight. Выводим наши чекбоксы*/
     event.preventDefault();
-    const enemy = enemyAttack();
+    const enemy = enemyAttack(); 
+    console.log('en :>> ', enemy);
     const attack = {};
+    fight(enemy, attack) 
 
     for(let item of $formFight) { //Перебираем все инпуты у формы
-           if(item.checked && item.name === 'hit') { //Если выбран удар, то в обьект записываем куда бьем и какой урон
-                attack.value = randomInteger(0, HIT[item.value]);
-                attack.hit = item.value;
-             }
-            if(item.checked && item.name === 'defence') { //Если выбрана защита, то в обьект записываем что защищаем
-                attack.defence = item.value;
+        if(item.checked && item.name === 'hit') { //Если выбран удар, то в обьект записываем куда бьем и какой урон
+            attack.value = randomInteger(HIT[item.value]);
+            attack.hit = item.value;
             }
-           item.checked = false;
-    } 
-
-    function fight(enemy, attack) {
-        if (attack.hit === enemy.defence) {
-            attack.value = 0;
-        } else if (enemy.hit === attack.defence){
-            enemy.value = 0;
+        if(item.checked && item.name === 'defence') { //Если выбрана защита, то в обьект записываем что защищаем
+            attack.defence = item.value;
         }
-    }
-        fight(enemy, attack) 
-
-    function repeat(player) { /*При нажатии на кнопку вызываеться функция changeHP и отнимается количество жизни и отображаеться на шкале при вызове changeHP.
-        Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
-        player.changeHP(randomInteger(1, 20));
-        player.renderHP();
-
-        player.changeHP(randomInteger(1, 20));
-        player.renderHP();
-    }
-        repeat(liuKang)
-        repeat(subZero)
+        item.checked = false;
+    }  console.log('at :>> ', attack);
+       
+     /*При нажатии на кнопку вызываеться функция changeHP и отнимается количество жизни и отображаеться на шкале при вызове changeHP.
+       Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
 
     if (liuKang.hp === 0 || subZero.hp === 0) {
         $fightButton.disabled = true;
@@ -173,5 +158,18 @@ $formFight.addEventListener('submit', function(event) { /*Вешаем слуш�
     }
 })
 
-
-
+function fight(attack, enemy) { 
+    if (attack.hit !== enemy.defence) {
+        subZero.changeHP(attack.value);
+        subZero.renderHP();
+    } else {
+        attack.value = 0;
+    }
+    
+    if (enemy.hit !== attack.defence) {
+        liuKang.changeHP(enemy.value);
+        liuKang.renderHP();
+    } else {
+        enemy.value = 0;
+    }
+}
