@@ -20,6 +20,8 @@
 html {
   margin: 0;
   padding: 0;
+  visibility: visible;
+
 }
 
 body {
@@ -401,4 +403,28 @@ input[type="radio"]:checked + label > span::before {
 }
 input[type="radio"]:checked + label > span:hover {
   background: none;
+}
+
+.reloadWrap {
+  position: absolute;
+  top: 10%;
+  z-index: 1000;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+
+.reloadWrap .button {
+  margin-top: 0px;
+}
+
+.winTitle {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  font-size: 36px;
+  transform: translate(-50%, 0%);
+  text-transform: uppercase;
+  z-index: 1000;
+  color: white;
+  font-family: "Mortal Kombat 3";
 }
