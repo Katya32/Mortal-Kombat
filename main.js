@@ -1,5 +1,6 @@
 const $arenas = document.querySelector('.arenas');
-const $randomButton = document.querySelector('.button')
+const $fightButton = document.querySelector('.button');
+const $formFight = document.querySelector('.control');
 
 const liuKang = {
     player: 1,
@@ -7,13 +8,11 @@ const liuKang = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
     weapon: ['Dragon sword', 'Nunchucks', 'Fire ball'],
-    attack: function () {
-        console.log(liuKang.name + ' ' + 'Fight...');
-    },
+
     changeHP,
     elHP,
     renderHP,
-    attack,
+    //attack,
 }
 
 const subZero = {
@@ -44,19 +43,18 @@ function createPlayer(character) {  //Функция создает тэги с 
     attack: function () {
         console.log(subZero.name + ' ' + 'Fight...');
     },
-}
-subZero.attack()
 
-function createElement(tag, className) {
-const $tag = document.createElement(tag);
-
-if(className) {
-    $tag.classList.add(className);
-  }
-return $tag
 }
 
-function createPlayer(character) {
+function createElement(tag, className) {  //Функция для создания тэгов и классов
+    const $tag = document.createElement(tag);
+    if(className) {
+        $tag.classList.add(className);
+      }
+    return $tag
+}
+
+function createPlayer(character) {  //Функция создает тэги с классами и вставляет их в $player
     const $player = createElement('div', 'player' + character.player);
     const $progressbar = createElement('div', 'progressbar');
     const $life = createElement('div', 'life');
@@ -64,15 +62,10 @@ function createPlayer(character) {
     const $character = createElement('div', 'character');
     const $img = createElement('img');
 
-
     $life.style.width = character.hp + '%';
-
     $name.innerText = character.name + ' ' + character.hp + '%';
 
-    $name.innerText = character.name;
-
     $img.src = character.img;
-
     
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
@@ -161,48 +154,117 @@ $randomButton.addEventListener('click', function() {
     changeHP(subZero);
 })
 
-function changeHP(player) {
-    const $playerHP = document.querySelector('.player' + player.player +' .name');
-    const $playerLife = document.querySelector('.player' + player.player +' .life');
-    $playerLife.style.width = player.hp +'%';   
-    player.hp -= randomInteger(1, 20);
-
-    if(player.hp <= 0) {
-        player.hp = 0;
-        $playerLife.style.width = 0 + '%';
-        $randomButton.disabled = true;
-    } 
+function changeHP(randomInteger) { //При нажатии на кнопку Рандом у игрока отнимаеться рамдомное количество жизни. Если жизнь уйдет в минус, игроку запишется значение 0
+    this.hp -= randomInteger;
     
-    if (player.hp >= 0) {
-        $playerHP.innerText = player.name + ' ' +player.hp + '%';
-    }
-
-    function chooseWinner(player1, player2)  {
-        if (player1.hp > 0 && player2.hp <= 0) {
-            $arenas.appendChild(playerWin(player1.name));
-        } 
-        
-        if (player1.hp <= 0 && player2.hp > 0) {
-            $arenas.appendChild(playerWin(player2.name));
-        }
-
-        if (player1.hp <= 0 && player2.hp <= 0) {
-            $arenas.appendChild(playerWin('No one'));
-        }
-    }
-       chooseWinner(liuKang, subZero)
+    if(this.hp <= 0) {
+        this.hp = 0;
+    } 
+    return this.hp
 }
 
-function randomInteger(min, max) {
-    let random = Math.ceil(min + Math.random()*(max + 1 -min))
-    return random
+function  renderHP() {  //ширина и количество шкалы жизни меняются в зависимости от hp
+    this.elHP().style.width = this.hp +'%'; 
+    const $playerName = document.querySelector('.player' + this.player +' .name');
+    $playerName.innerText = this.name + ' ' +this.hp + '%';
 }
 
-function playerWin(name){
-    $winTitle = createElement('div', 'winTitle');
-    $winTitle.innerText = name + ' win';
+function playerWins(name){ // Создает тэг div с классом winTitlе и выводит имя победителя или ничью
+    const  $winTitle = createElement('div', 'winTitle');
+    if(name) {
+     $winTitle.innerText = name + ' wins';
+    } else {
+     $winTitle.innerText = 'draw';
+    }
     return $winTitle;
+ }
+
+function randomInteger(num) { //Создает рандомное число
+    return Math.ceil(Math.random()*num)
 }
+
+function createReloadButton() { /*Создает кнопку перезагрузки при завершении игры(если у одного из игроков hp = 0) 
+                                  и вешает на него слушателя событый с функцией перезагрузки*/
+    const $div = createElement("div", "reloadWrap");
+    const $button = createElement("button", "button");
+    $button.innerText = 'Restart';
+
+    $div.addEventListener('click', function() {
+        window.location.reload()
+    })
+
+    $div.append($button);
+    $arenas.append($div);
+}
+ 
 
 $arenas.appendChild(createPlayer(liuKang));
-$arenas.appendChild(createPlayer(subZero))
+$arenas.appendChild(createPlayer(subZero));
+
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
+
+function enemyAttack() { //Рандомный урон от врага
+    const hit =  ATTACK[randomInteger(ATTACK.length-1)-1];
+    const defence = ATTACK[randomInteger(ATTACK.length-1)-1];
+     return {
+         value: randomInteger(HIT[hit]), 
+         hit, 
+         defence,
+    }
+ }
+
+$formFight.addEventListener('submit', function(event) { /*Вешаем слушателя событий на кнопку Fight. Выводим наши чекбоксы*/
+    event.preventDefault();
+    const enemy = enemyAttack(); 
+    console.log('en :>> ', enemy);
+    const attack = {};
+    fight(enemy, attack) 
+
+    for(let item of $formFight) { //Перебираем все инпуты у формы
+        if(item.checked && item.name === 'hit') { //Если выбран удар, то в обьект записываем куда бьем и какой урон
+            attack.value = randomInteger(HIT[item.value]);
+            attack.hit = item.value;
+            }
+        if(item.checked && item.name === 'defence') { //Если выбрана защита, то в обьект записываем что защищаем
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }  console.log('at :>> ', attack);
+       
+     /*При нажатии на кнопку вызываеться функция changeHP и отнимается количество жизни и отображаеться на шкале при вызове changeHP.
+       Если у одного из игроков hp = 0, кнопка не активна. Выводиться имя победителя или ничья.*/
+
+    if (liuKang.hp === 0 || subZero.hp === 0) {
+        $fightButton.disabled = true;
+        createReloadButton()
+    }
+
+    if (liuKang.hp === 0 && liuKang.hp < subZero.hp) {
+        $arenas.appendChild(playerWins(subZero.name));
+    } else if (subZero.hp === 0 && subZero.hp < liuKang.hp) {
+        $arenas.appendChild(playerWins(liuKang.name));
+    } else if (liuKang.hp === 0 && subZero.hp === 0) {
+        $arenas.appendChild(playerWins());
+    }
+})
+
+function fight(attack, enemy) { 
+    if (attack.hit !== enemy.defence) {
+        subZero.changeHP(attack.value);
+        subZero.renderHP();
+    } else {
+        attack.value = 0;
+    }
+    
+    if (enemy.hit !== attack.defence) {
+        liuKang.changeHP(enemy.value);
+        liuKang.renderHP();
+    } else {
+        enemy.value = 0;
+    }
+}
