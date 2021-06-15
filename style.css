@@ -20,8 +20,6 @@
 html {
   margin: 0;
   padding: 0;
-  visibility: visible;
-
 }
 
 body {
@@ -101,7 +99,7 @@ body {
 .player1,
 .player2 {
   width: 50%;
-  /*position: relative;*/
+  position: relative;
 }
 
 .progressbar {
@@ -178,6 +176,10 @@ body {
   background-size: cover;
   background-position: center;
   border-top: 4px solid #f5d100;
+  padding: 6px 40px;
+  overflow: scroll;
+  color: white;
+  font-family: Arial;
 }
 
 .character {
@@ -196,13 +198,15 @@ body {
 }
 
 .player2 .character img {
-  transform: scaleX(-1);
+  transform: scaleX(-1) translate(50%, 0);
 }
 
 .character img {
   height: 100%;
   position: absolute;
   bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
 .fight {
@@ -403,28 +407,4 @@ input[type="radio"]:checked + label > span::before {
 }
 input[type="radio"]:checked + label > span:hover {
   background: none;
-}
-
-.reloadWrap {
-  position: absolute;
-  top: 10%;
-  z-index: 1000;
-  left: 50%;
-  transform: translate(-50%, 0%);
-}
-
-.reloadWrap .button {
-  margin-top: 0px;
-}
-
-.winTitle {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  font-size: 36px;
-  transform: translate(-50%, 0%);
-  text-transform: uppercase;
-  z-index: 1000;
-  color: white;
-  font-family: "Mortal Kombat 3";
 }
