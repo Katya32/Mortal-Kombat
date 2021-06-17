@@ -7,3 +7,8 @@ export const createElement = (tag, className) => {  //Функция для со
       }
     return $tag
 }
+
+export const getTime = () => {
+  const date = new Date();
+  return `${data.getHours()} : ${data.getMinutes()}`
+}

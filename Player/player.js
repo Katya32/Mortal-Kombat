@@ -1,14 +1,15 @@
-export class Player {
+class Player {
     constructor(props) {
-        this.player = props.player;
         this.name = props.name;
         this.hp = props.hp;
         this.img = props.img;
-        this.weapon = props.weapon;
+        this.player = props.player;
+        this.selector = `player${this.player}`;
+        this.rootSelector = props.rootSelector;
     }
 
     elHP = () => {  //coздает ссылку на div c классом life у каждого игрока (шкала жизни)
-        return document.querySelector('.player' + this.player +' .life');
+        return document.querySelector(`.player${this.selector}.life`);
     }
 
     renderHP = () => {//ширина и количество шкалы жизни меняются в зависимости от hp
@@ -25,25 +26,30 @@ export class Player {
         return this.hp
     }
 
-    createPlayer = () => {//Функция создает тэги с классами и вставляет их в $player
-        const $player = createElement('div', 'player' + character.player);
+    createPlayer = () => {  //Функция создает тэги с классами и вставляет их в $player
+        const $player = createElement('div', this.selector);
         const $progressbar = createElement('div', 'progressbar');
         const $life = createElement('div', 'life');
         const $name = createElement('div', 'name');
         const $character = createElement('div', 'character');
         const $img = createElement('img');
     
-        $life.style.width = character.hp + '%';
-        $name.innerText = character.name + ' ' + character.hp + '%';
+        $life.style.width = this.hp + '%';
+        $name.innerText = this.name + ' ' + this.hp + '%';
     
-        $img.src = character.img;
+        $img.src = this.img;
         
         $progressbar.appendChild($life);
         $progressbar.appendChild($name);
         $player.appendChild($progressbar);
         $player.appendChild($character);
         $character.appendChild($img);
-        
+
+        const $root = document.querySelector(`.${this.rootSelector}`);
+        $root.appendChild($player);
+
         return $player;
     }
 }
+
+export default Player;

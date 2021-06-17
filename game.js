@@ -6,10 +6,7 @@ class Game {
             name: 'Liu Kang',
             hp: 100,
             img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
-            weapon: ['Dragon sword', 'Nunchucks', 'Fire ball'],
-            changeHP,
-            elHP,
-            renderHP,
+            rootSelector: 'arenas',
         })
         
 
@@ -18,10 +15,7 @@ class Game {
             name: 'Sub Zero',
             hp: 100,
             img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-            weapon: ['Sword', 'Snow ball'],
-            changeHP,
-            elHP,
-            renderHP,
+            rootSelector: 'arenas',
         })
 
         init();
@@ -52,8 +46,8 @@ class Game {
     } 
 
     fight = (player1, player2, hit, enemy) =>{
-        // const enemy = enemyAttack(); 
-        // const player = playerAttack();
+        const enemy = enemyAttack(); 
+        const player = playerAttack();
     
         if (player.defence !== enemy.hit) {
             liuKang.changeHP(enemy.value);
@@ -74,8 +68,8 @@ class Game {
         showResult(player_1, player_2);
     }
     
-    generateLogs = (type, liuKang ={}, subZero ={}, damage) => {
-        let text = getTextLog(type, liuKang.name, subZero.name);
+    generateLogs = (type, {name} ={}, {name: playerName2, hp} ={}, damage) => {
+        let text = getTextLog(type, name, playerName2);
     
         switch(type) {
             case 'hit':
@@ -93,11 +87,6 @@ class Game {
     }
         const el = `<p>${text}</p>`;
         $chat.insertAdjacentHTML('afterbegin', el);
-    }
-    
-    getTime = () => {
-        const date = new Date();
-        return `${data.getHours()} : ${data.getMinutes()}`
     }
     
     getTextLog = (type, liuKang, subZero) => {
@@ -129,8 +118,8 @@ class Game {
     }
     
     init = () => {
-        $arenas.appendChild(createPlayer(liuKang));
-        $arenas.appendChild(createPlayer(subZero));
+        player1.createPlayer();
+        player2.createPlayer();
         generateLogs('start', liuKang, subZero, 0);
     }
   
