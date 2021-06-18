@@ -1,3 +1,7 @@
+import Player from './Player';
+import { randomInteger, createElement,  getTime} from './utils';
+import { logs, HIT } from './constants';
+
 class Game {
 
     start = () => {
@@ -168,3 +172,4 @@ class Game {
     }
 }
 
+export default Game;

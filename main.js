@@ -1,7 +1,5 @@
-import { Game} from './game';
-import Player from './Player';
-import { randomInteger, createElement,  getTime} from './utils';    //полний путь C:\Users\К\Desktop\Mortal-Kombat\utils
-import { logs, HIT, ATTACK } from './constants';
+import Game from './game.js';
+
 
 
 const $arenas = document.querySelector('.arenas');
