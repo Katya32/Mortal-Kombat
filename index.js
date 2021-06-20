@@ -66,7 +66,8 @@ async function init() {
             setTimeout(() => {
                 // TODO: Здесь должен быть код который перенаправит вас на ваше игровое поле...
                 //  Пример использования: window.location.pathname = 'arenas.html';
-            }, 1000);
+                window.location.pathname = './main.html';
+            },);
         });
 
         img.src = item.avatar;
