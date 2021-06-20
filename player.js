@@ -14,8 +14,8 @@ class Player {
         return  document.querySelector(`.${this.selector} .life`);
       }
       
-    changeHP = (randomInteger) => { //При нажатии на кнопку Рандом у игрока отнимаеться рамдомное количество жизни. Если жизнь уйдет в минус, игроку запишется значение 0
-        this.hp -= randomInteger;
+    changeHP = (num) => { //При нажатии на кнопку Рандом у игрока отнимаеться рамдомное количество жизни. Если жизнь уйдет в минус, игроку запишется значение 0
+        this.hp -= num;
         
         if(this.hp <= 0) {
             this.hp = 0;
