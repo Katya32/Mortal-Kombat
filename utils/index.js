@@ -8,13 +8,7 @@ export const createElement = (tag, className) => {  //Функция для со
     return $tag
 }
 
-
-export const playerWins = (name) => { // Создает тэг div с классом winTitlе и выводит имя победителя или ничью
-    const  $winTitle = createElement('div', 'winTitle');
-    if(name) {
-     $winTitle.innerText = name + ' wins';
-    } else {
-     $winTitle.innerText = 'draw';
-    }
-    return $winTitle;
- }
+export const getTime = () => {
+  const date = new Date();
+  return `${data.getHours()} : ${data.getMinutes()}`
+}
