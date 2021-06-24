@@ -136,6 +136,7 @@ class Game {
     
     $div.addEventListener('click', function() {
     window.location.reload()
+    window.location.pathname = '/randomPlayer/index.html';
     })
     
     $div.append($button);
